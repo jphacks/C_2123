@@ -1,0 +1,15 @@
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 offset-lg-2">
+        <h3 class="mt-5">Live Streaming</h3>
+        <img src="{{ url_for('video_feed') }}" width="50%" />
+      </div>
+    </div>
+  </div>
+  <h2>顔検出を終わります</h2>
+  <!-- ボタンを押すと、/に飛ぶ -->
+  <form action="/" method="get">
+    <input type="submit" value='finish video'>
+  </form>
+</body>

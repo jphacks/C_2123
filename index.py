@@ -5,15 +5,15 @@ import os
 
 from flask.scaffold import F
 
-camera = cv2.VideoCapture(0)
-# 分類器の指定
-cascade_path = os.path.join(
-    cv2.data.haarcascades, "haarcascade_frontalface_alt2.xml"
-)
-cascade = cv2.CascadeClassifier(cascade_path)
+
 
 def gen_frames(): 
-
+    camera = cv2.VideoCapture(0)
+    # 分類器の指定
+    cascade_path = os.path.join(
+        cv2.data.haarcascades, "haarcascade_frontalface_alt2.xml"
+    )
+    cascade = cv2.CascadeClassifier(cascade_path)
     while True:
         success, frame = camera.read()  # read the camera frame
         if not success:
@@ -41,9 +41,14 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
+@app.route('/video')
+def video():
+    return render_template('video.html')
+
 @app.route('/video_feed')
 def video_feed():
     return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
 
 
 if __name__ == "__main__":
