@@ -14,19 +14,23 @@ camera = cv2.VideoCapture(0)
 man1_image = face_recognition.load_image_file("man1-1.jpg")
 man1_face_encoding = face_recognition.face_encodings(man1_image)[0]
 man2_image = face_recognition.load_image_file("man2-1.jpg")
-man2_face_encoding = face_recognition.face_encodings(man1_image)[0]
+man2_face_encoding = face_recognition.face_encodings(man2_image)[0]
 man3_image = face_recognition.load_image_file("man3-1.jpg")
-man3_face_encoding = face_recognition.face_encodings(man1_image)[0]
+man3_face_encoding = face_recognition.face_encodings(man3_image)[0]
+man4_image = face_recognition.load_image_file("my-photo.jpg")
+man4_face_encoding = face_recognition.face_encodings(man4_image)[0]
 
 known_face_encodings = [
     man1_face_encoding,
     man2_face_encoding,
-    man3_face_encoding
+    man3_face_encoding,
+    man4_face_encoding
 ]
 known_face_names = [
     "man1",
     "man2",
-    "man3"
+    "man3",
+    "myname"
 ]
 
 face_locations = []
@@ -57,6 +61,7 @@ def gen_frames():
 
                     # 動画内の顔ともっとも距離が近い顔を計算する
                     face_distances = face_recognition.face_distance(known_face_encodings, frame_face_encoding)
+                    print(face_distances)
                     best_match_index = np.argmin(face_distances)
                     if matches[best_match_index]:
                         name = known_face_names[best_match_index]
