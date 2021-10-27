@@ -5,10 +5,9 @@
 from flask import Flask, render_template, Response
 import cv2
 import face_recognition
-import matplotlib.pyplot as plt
 import numpy as np
 
-camera = cv2.VideoCapture(0)
+
 
 #顔写真と、特徴量の登録
 man1_image = face_recognition.load_image_file("man1-1.jpg")
@@ -38,7 +37,8 @@ face_encodings = []
 face_names = []
 process_this_frame = True
 
-def gen_frames():  
+def gen_frames():
+    camera = cv2.VideoCapture(0)  
     while True:
         success, frame = camera.read()  # read the camera frame
         if not success:
@@ -61,7 +61,6 @@ def gen_frames():
 
                     # 動画内の顔ともっとも距離が近い顔を計算する
                     face_distances = face_recognition.face_distance(known_face_encodings, frame_face_encoding)
-                    print(face_distances)
                     best_match_index = np.argmin(face_distances)
                     if matches[best_match_index]:
                         name = known_face_names[best_match_index]
@@ -97,6 +96,11 @@ app = Flask(__name__)
 @app.route('/')
 def index():
     return render_template('index.html')
+
+
+@app.route('/video')
+def video():
+    return render_template('video.html')
 
 @app.route('/video_feed')
 def video_feed():
