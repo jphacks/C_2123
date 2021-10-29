@@ -9,14 +9,11 @@ href= "{{ url_for('static',filename='style.css') }}">
 </head>
 <body>
 	<h2>表示したい内容を登録してください</h2>
-    <form action="" method="post">
+    <form action="/add" method="post" enctype="multipart/form-data">
         <label>表示名</label><br>
-        <input type="text" name="first-name" maxlength="10" value="" placeholder="表示名を入力">
-    </form>
-    <form action="" method="post">
+        <input type="text" name="name" maxlength="10" placeholder="表示名を入力"><br>
         <label>自己紹介文</label><br>
-        <textarea name="message-body" placeholder="自己紹介を入力"></textarea>
-    </form>
+        <textarea name="intro" placeholder="自己紹介を入力"></textarea>
     <style>
       textarea{
         width:100%;
@@ -25,9 +22,15 @@ href= "{{ url_for('static',filename='style.css') }}">
       }
     </style>
     <h2>顔写真を登録してください</h2>
-    <input type="file" name="example" accept="image/jpeg, image/png">
+    <input type="file" name="image" accept="image/*" required>
+    <input type="submit" value="Add"/>
+    </form>
     <a href="" class="btn btn--orange">登録する</a>
     <a href="/" class="btn btn--orange">メニューに戻る</a>
 
+    <br>
+    {% for d in data %}
+      <p>{{d.id}} : {{d.name}} : {{d.intro}} : {{d.man_face_encoding_str}}</p>
+    {% endfor %}
 </body>
 </html>
