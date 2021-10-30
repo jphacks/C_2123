@@ -41,7 +41,7 @@ face_encodings = []
 face_names = []
 process_this_frame = True
 
-def gen_frames(known_face_names, known_face_encodings):
+def gen_frames(known_face_names, known_face_encodings,known_face_intros):
     camera = cv2.VideoCapture(0)  
     while True:
         success, frame = camera.read()  # read the camera frame
@@ -57,19 +57,23 @@ def gen_frames(known_face_names, known_face_encodings):
                 frame_face_locations = face_recognition.face_locations(rgb_small_frame)
                 frame_face_encodings = face_recognition.face_encodings(rgb_small_frame, frame_face_locations)
                 frame_face_names = []
+                frame_face_intros = []
 
                 for frame_face_encoding in frame_face_encodings:
                     # 登録してある顔と動画内の顔が一致するか確認する
                     matches = face_recognition.compare_faces(known_face_encodings, frame_face_encoding)
                     name = "Unknown"
+                    intro = "Unknown"
 
                     # 動画内の顔ともっとも距離が近い顔を計算する
                     face_distances = face_recognition.face_distance(known_face_encodings, frame_face_encoding)
                     best_match_index = np.argmin(face_distances)
                     if matches[best_match_index]:
                         name = known_face_names[best_match_index]
+                        intro = known_face_intros[best_match_index]
 
                     frame_face_names.append(name)
+                    frame_face_intros.append(intro)
 
             # 画面に表示する
             for (top, right, bottom, left), name in zip(frame_face_locations, frame_face_names):
@@ -83,9 +87,12 @@ def gen_frames(known_face_names, known_face_encodings):
                 cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
 
                 # 顔の下にラベルを作成する
-                cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
+                cv2.rectangle(frame, (left, bottom - 70), (right, bottom), (0, 0, 255), cv2.FILLED)
                 font = cv2.FONT_HERSHEY_DUPLEX
                 cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
+                cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
+                cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
+
 
             # 画像を表示する
 
@@ -128,12 +135,12 @@ def video_feed():
     data = Test.query.all()
     known_face_encodings = []
     known_face_names = []
-    known_face_intro = []
+    known_face_intros = []
     for d in data:
         known_face_names.append(d.name)
-        known_face_intro.append(d.intro)
+        known_face_intros.append(d.intro)
         known_face_encodings.append(list(map(float, d.man_face_encoding_str.split(","))))
-    return Response(gen_frames(known_face_names, known_face_encodings), mimetype='multipart/x-mixed-replace; boundary=frame')
+    return Response(gen_frames(known_face_names, known_face_encodings,known_face_intros), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route('/add', methods=['POST'])
 def add():
