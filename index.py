@@ -76,7 +76,7 @@ def gen_frames(known_face_names, known_face_encodings,known_face_intros):
                     frame_face_intros.append(intro)
 
             # 画面に表示する
-            for (top, right, bottom, left), name in zip(frame_face_locations, frame_face_names):
+            for (top, right, bottom, left), name, intro in zip(frame_face_locations, frame_face_names, frame_face_intros):
                 # 認識は大きさを小さくして行っていたため、大きさを元に戻す
                 top *= 4
                 right *= 4
