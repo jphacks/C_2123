@@ -63,7 +63,7 @@ def gen_frames(known_face_names, known_face_encodings,known_face_intros):
                     # 登録してある顔と動画内の顔が一致するか確認する
                     matches = face_recognition.compare_faces(known_face_encodings, frame_face_encoding)
                     name = "Unknown"
-                    # intro = "Unknown"
+                    intro = "Unknown"
 
                     # 動画内の顔ともっとも距離が近い顔を計算する
                     face_distances = face_recognition.face_distance(known_face_encodings, frame_face_encoding)
@@ -87,10 +87,10 @@ def gen_frames(known_face_names, known_face_encodings,known_face_intros):
                 cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
 
                 # 顔の下にラベルを作成する
-                cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
+                cv2.rectangle(frame, (left, bottom - 70), (right, bottom), (0, 0, 255), cv2.FILLED)
                 font = cv2.FONT_HERSHEY_DUPLEX
                 cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
-                cv2.rectangle(frame, (left, bottom - 70), (right, bottom), (0, 0, 255), cv2.FILLED)
+                cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
                 cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
 
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>はじめまして(仮)</title>
+<title>Who are you?</title>
 <link rel= "stylesheet" type= "text/css" 
 href= "{{ url_for('static',filename='style.css') }}">
 </head>
@@ -32,7 +32,7 @@ href= "{{ url_for('static',filename='style.css') }}">
 
     <br>
     {% for d in data %}
-      <p>{{d.id}} : {{d.name}} : {{d.intro}} : {{d.man_face_encoding_str}}</p>
+      <!-- <p>{{d.id}} : {{d.name}} : {{d.intro}} : {{d.man_face_encoding_str}}</p> -->
     {% endfor %}
 </body>
 </html>
