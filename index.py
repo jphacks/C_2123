@@ -21,26 +21,28 @@ man3_image = face_recognition.load_image_file("man3-1.jpg")
 man3_face_encoding = face_recognition.face_encodings(man3_image)[0]
 man4_image = face_recognition.load_image_file("my-photo.jpg")
 man4_face_encoding = face_recognition.face_encodings(man4_image)[0]
-
+'''
 known_face_encodings = [
     man1_face_encoding,
     man2_face_encoding,
     man3_face_encoding,
     man4_face_encoding
 ]
+
 known_face_names = [
     "man1",
     "man2",
     "man3",
     "myname"
 ]
+'''
 
 face_locations = []
 face_encodings = []
 face_names = []
 process_this_frame = True
 
-def gen_frames():
+def gen_frames(known_face_names, known_face_encodings):
     camera = cv2.VideoCapture(0)  
     while True:
         success, frame = camera.read()  # read the camera frame
@@ -124,7 +126,15 @@ def registration():
 
 @app.route('/video_feed')
 def video_feed():
-    return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+    data = Test.query.all()
+    known_face_encodings = []
+    known_face_names = []
+    known_face_intro = []
+    for d in data:
+        known_face_names.append(d.name)
+        known_face_intro.append(d.intro)
+        known_face_encodings.append(list(map(float, d.man_face_encoding_str.split(","))))
+    return Response(gen_frames(known_face_names, known_face_encodings), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route('/add', methods=['POST'])
 def add():
