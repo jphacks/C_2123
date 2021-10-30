@@ -2,11 +2,13 @@
 # 上記のページのサンプルコードを参考にしました
 
 #Import necessary libraries
-from flask import Flask, render_template, Response
+from flask import Flask, render_template, Response, request, redirect, url_for
 import cv2
 import face_recognition
 import numpy as np
 import os
+from flask_sqlalchemy import SQLAlchemy
+from werkzeug.utils import secure_filename
 
 
 
@@ -19,26 +21,28 @@ man3_image = face_recognition.load_image_file("man3-1.jpg")
 man3_face_encoding = face_recognition.face_encodings(man3_image)[0]
 man4_image = face_recognition.load_image_file("my-photo.jpg")
 man4_face_encoding = face_recognition.face_encodings(man4_image)[0]
-
+'''
 known_face_encodings = [
     man1_face_encoding,
     man2_face_encoding,
     man3_face_encoding,
     man4_face_encoding
 ]
+
 known_face_names = [
     "man1",
     "man2",
     "man3",
     "myname"
 ]
+'''
 
 face_locations = []
 face_encodings = []
 face_names = []
 process_this_frame = True
 
-def gen_frames():
+def gen_frames(known_face_names, known_face_encodings):
     camera = cv2.VideoCapture(0)  
     while True:
         success, frame = camera.read()  # read the camera frame
@@ -93,11 +97,22 @@ def gen_frames():
 #Initialize the Flask app
 
 app = Flask(__name__)
+# データベースの設定
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
+
+class Test(db.Model):
+    # カラムをここで定義
+    id = db.Column(db.Integer, primary_key = True)
+    name = db.Column(db.String(128), nullable=True)
+    intro = db.Column(db.String(128), nullable=True)
+    man_face_encoding_str = db.Column(db.String, nullable=True)
 
 @app.route('/')
 def index():
     return render_template('index.html')
-
 
 @app.route('/video')
 def video():
@@ -105,14 +120,44 @@ def video():
 
 @app.route('/registration')
 def registration():
-    return render_template('registration.html')
+    # これでデータベースからデータを受け取れる
+    data = Test.query.all()
+    return render_template('registration.html', data=data)
 
 @app.route('/video_feed')
 def video_feed():
-    return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+    data = Test.query.all()
+    known_face_encodings = []
+    known_face_names = []
+    known_face_intro = []
+    for d in data:
+        known_face_names.append(d.name)
+        known_face_intro.append(d.intro)
+        known_face_encodings.append(list(map(float, d.man_face_encoding_str.split(","))))
+    return Response(gen_frames(known_face_names, known_face_encodings), mimetype='multipart/x-mixed-replace; boundary=frame')
 
-
-
+@app.route('/add', methods=['POST'])
+def add():
+    # クラスの定義
+    new_name = Test()
+    # 簡単に撮れるデータは、直接インスタンスに代入
+    new_name.name = request.form["name"]
+    new_name.intro = request.form['intro']
+    # 画像ファイルは別途処理が必要
+    image = request.files.get("image")
+    filename = secure_filename(image.filename)
+    filepath = "image/" + filename
+    image.save(filepath)
+    # 保存した画像の顔をencodingして配列に
+    man_image = face_recognition.load_image_file(filepath)
+    man_face_encoding = face_recognition.face_encodings(man_image)[0]
+    # 配列はデータベースに入らないので、文字列に変換してインスタンスに渡す
+    new_name.man_face_encoding_str = ','.join(str(x) for x in man_face_encoding)
+    # データベースへ保存
+    db.session.add(new_name)
+    db.session.commit()
+    return redirect(url_for('index'))
 
 if __name__ == "__main__":
+    db.create_all()
     app.run(debug=True)
