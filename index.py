@@ -13,28 +13,7 @@ from werkzeug.utils import secure_filename
 
 
 #顔写真と、特徴量の登録
-man1_image = face_recognition.load_image_file("man1-1.jpg")
-man1_face_encoding = face_recognition.face_encodings(man1_image)[0]
-man2_image = face_recognition.load_image_file("man2-1.jpg")
-man2_face_encoding = face_recognition.face_encodings(man2_image)[0]
-man3_image = face_recognition.load_image_file("man3-1.jpg")
-man3_face_encoding = face_recognition.face_encodings(man3_image)[0]
-man4_image = face_recognition.load_image_file("my-photo.jpg")
-man4_face_encoding = face_recognition.face_encodings(man4_image)[0]
-'''
-known_face_encodings = [
-    man1_face_encoding,
-    man2_face_encoding,
-    man3_face_encoding,
-    man4_face_encoding
-]
-known_face_names = [
-    "man1",
-    "man2",
-    "man3",
-    "myname"
-]
-'''
+
 
 face_locations = []
 face_encodings = []
@@ -89,9 +68,8 @@ def gen_frames(known_face_names, known_face_encodings,known_face_intros):
                 # 顔の下にラベルを作成する
                 cv2.rectangle(frame, (left, bottom - 70), (right, bottom), (0, 0, 255), cv2.FILLED)
                 font = cv2.FONT_HERSHEY_DUPLEX
-                cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
-                # cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
-                cv2.putText(frame, intro, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
+                cv2.putText(frame, 'name:'+name, (left + 6, bottom - 40), font, 1.0, (255, 255, 255), 1)
+                cv2.putText(frame, 'intro:'+intro, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
 
 
             # 画像を表示する
