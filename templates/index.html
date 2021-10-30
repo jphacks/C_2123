@@ -3,15 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>はじめまして(仮)</title>
+<title>Who are you?</title>
+<link rel= "stylesheet" type= "text/css" 
+href= "{{ url_for('static',filename='style.css') }}">
 </head>
 <body>
-	<h1>はじめまして(仮)へようこそ</h1>
-	<h2>事前に登録した顔を検出し、タグを表示させることができます</h2>
+	<h1>「Who are you?」へようこそ</h1>
+	<h2>このサービスでは、事前に登録した顔を検出しタグを表示させることができます</h2>
+  <br>
+  <h2>まずは情報の登録を行ってください</h2>
+  <a href="/registration" class="btn btn--orange">情報の登録</a>
+  <br>
+  <br>
+  <h2>顔の検出を行いたい方はこちら</h2>
+  <a href="/video" class="btn btn--orange">顔検出の開始</a>
+  
 </body>
-<h2>顔検出を始めます</h2>
-  <!-- ボタンを押すと、/videoに飛ぶ -->
-  <form action="/video" method="get">
-    <input type="submit" value='start video'>
-  </form>
 </html>
+

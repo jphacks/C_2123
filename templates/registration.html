@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Who are you?(仮)</title>
+<link rel= "stylesheet" type= "text/css" 
+href= "{{ url_for('static',filename='style.css') }}">
+</head>
+<body>
+  <h1>情報の登録</h1>
+	<h2>表示したい内容を入れてください</h2>
+    <form action="" method="post">
+        <label>表示名</label><br>
+        <input type="text" name="first-name" maxlength="10" value="" placeholder="表示名を入力" class="m-form-text">
+    </form>
+    <br>
+    <form action="" method="post">
+        <label>自己紹介文</label><br>
+        <textarea name="message-body" placeholder="自己紹介を入力" class="m-form-textarea"></textarea>
+    </form>
+    <br>
+    <h2>顔写真を登録してください</h2>
+    <input type="file" name="example" accept="image/jpeg, image/png">
+    <br>
+    <br>
+    <a href="" class="btn btn--orange">登録する</a>
+    <br>
+    <br>
+    <a href="/" class="btn btn--orange">メニューに戻る</a>
+</body>
+</html>

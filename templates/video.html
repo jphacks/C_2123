@@ -1,15 +1,20 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>はじめまして(仮)</title>
+<link rel= "stylesheet" type= "text/css" 
+href= "{{ url_for('static',filename='style.css') }}">
+</head>
 <body>
     <div class="container">
       <div class="row">
         <div class="col-lg-8 offset-lg-2">
-          <h3 class="mt-5">Live Streaming</h3>
+          <h3 class="mt-5">顔検出実施中</h3>
           <img src="{{ url_for('video_feed') }}" width="50%" />
         </div>
       </div>
     </div>
-    <h2>顔検出を終わります</h2>
-    <!-- ボタンを押すと、/に飛ぶ -->
-    <form action="/" method="get">
-      <input type="submit" value='finish video'>
-    </form>
+    <a href="/" class="btn btn--orange">メニューに戻る</a>
   </body>
